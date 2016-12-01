@@ -10,7 +10,6 @@
     "src"
   ],
   "scripts": {
-    "postinstall": "npm run build",
     "test": "npm run build && ava test.js",
     "build": "rollup -c -o index.js"
   },
