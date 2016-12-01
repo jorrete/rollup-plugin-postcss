@@ -15,6 +15,7 @@ export default function (options = {}) {
   const extensions = options.extensions || ['.css', '.sss']
   const getExport = options.getExport || function () {}
   const combineStyleTags = !!options.combineStyleTags;
+  const include = options.include || false;
 
   const concat = new Concat(true, 'styles.css', '\n');
 
@@ -22,6 +23,10 @@ export default function (options = {}) {
 
   return {
     intro() {
+      if (!include) {
+        return;
+      }
+
       if(combineStyleTags) {
         return `${injectStyleFuncCode}\n${injectFnName}(${JSON.stringify(concat.content.toString('utf8'))})`;
       } else {
@@ -44,7 +49,12 @@ export default function (options = {}) {
           .process(code, opts)
           .then(result => {
             let code, map;
-            if(combineStyleTags) {
+
+            if (!include) {
+              concat.add(result.opts.from, result.css, result.map && result.map.toString());
+              code = `export default ${JSON.stringify(result.css)};`;
+              map = { mappings: '' };
+            } else if(combineStyleTags) {
               concat.add(result.opts.from, result.css, result.map && result.map.toString());
               code = `export default ${JSON.stringify(getExport(result.opts.from))};`;
               map = { mappings: '' };
