@@ -6,9 +6,11 @@
   "jsnext:main": "./src/index.js",
   "files": [
     "index.js",
+    "rollup.config.js",
     "src"
   ],
   "scripts": {
+    "install": "npm install && npm run build",
     "test": "npm run build && ava test.js",
     "build": "rollup -c -o index.js"
   },
